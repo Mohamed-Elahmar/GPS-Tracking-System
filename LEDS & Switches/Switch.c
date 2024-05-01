@@ -12,13 +12,17 @@
 
 
 unsigned char SW1_Input(void){    
-return GPIO_PORTF_DATA_R & PF0_mask;
+	return GPIO_PORTF_DATA_R & PF0_mask;
 }
 
 
 
+unsigned char SW2_Input(void){    
+	return GPIO_PORTF_DATA_R & PF4_mask;
+}
 
 /*Coordinates Saved in EPROM*/
+
 
 void SW1_Pressed(void)            
 {
@@ -29,4 +33,3 @@ void SW1_Pressed(void)
 			GPIO_SetLedValues(LED_GREEN	,LED_ON	);
 		}
 }
-
