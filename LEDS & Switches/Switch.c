@@ -12,13 +12,13 @@
 
 
 unsigned char SW1_Input(void){    
-	return GPIO_PORTF_DATA_R & PF0_mask;
+	return GPIO_PORTF_DATA_R & PF4_mask;
 }
 
 
 
 unsigned char SW2_Input(void){    
-	return GPIO_PORTF_DATA_R & PF4_mask;
+	return GPIO_PORTF_DATA_R & PF0_mask;
 }
 
 /*Coordinates Saved in EPROM*/
@@ -27,7 +27,7 @@ unsigned char SW2_Input(void){
 void SW1_Pressed(void)            
 {
 	unsigned char Button1=SW1_Input();
-	if(Button1)
+	if(!Button1)
 		{
 			LED_TurnOff();
 			GPIO_SetLedValues(LED_GREEN	,LED_ON	);
