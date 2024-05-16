@@ -71,64 +71,97 @@ void GPS_Read(){
 
 
 
-
-void start_walking(float* trajectory_points){
-	wait_sec(27);  //wait for warm start
+float start_walking(float * trajectory_points){
 	
+		int i=0;    //trajectory_points index
+	  float speed;
+   float temp[2] ={0};
+	unsigned char button1;
 	float currentLat;
 	float currentLong;
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	//wait_sec(27);  //wait for warm start
+	
 	
 	//unsigned char SW1_in;	
-	
 	do{
 	GPS_Read();	  //GPS_formated array will store the point details as a strings	
-	if (strcmp (logFormated[1],"A")==0){ //Valid
+	if (strcmp (logFormatted[1],"A")==0){ //Valid
 				
 				///////////////
-				if (strcmp (logFormated[3],"N")==0)
-					 currentLat = atof (logFormated [2]) ;
-				else
-						currentLat = -atof (logFormated [2]);
+				
+				if (strcmp (logFormatted[3],"N")==0){
+					 currentLat = atof (logFormatted [2]) ;
+				}
+				else{
+						currentLat = -atof (logFormatted [2]);
+					  
+				}
 
 				
-				if (strcmp (logFormated [5], "E") ==0)
-						currentLong = atof ( logFormated [4]);
-				else
-						currentLong = -atof (logFormated[4]);
+				if (strcmp (logFormatted [5], "E") ==0)
+				{
+						currentLong = atof ( logFormatted [4]);
+				}
+				else{
+						currentLong = -atof (logFormatted[4]);
+					
+				}
 				/////////////////
 
-				int i=0;    //trajectory_points index
 				
-				//SW1_in=SW1_read();
-				//if( (SW1_in !=0X10)	){			//If SW1 is pressed
-				//	LEDs_turn_on(GREEN);
-				//	break;
-				//}
-				/////////////////
-				unsigned char button1;
-				button1 = SW1_Input();
-				SW1_Pressed();
-				///////////////////
-	
-				trajectory_points[i]=currentLat;  //i=0 ,even fields will be for latitude of each point
+				
+				/*
+				
+				*/
+				speed = atof ( logFormatted [6]);
+				
+				if(flagx==0){
+					trajectory_points[i]=currentLong;  //i=0 ,even fields will be for latitude of each point
 				i++;
 
-				trajectory_points[i]=currentLong; //i=1 ,odd fields will be for Longitude of each point
-				i++;	
+				trajectory_points[i]=currentLat; //i=1 ,odd fields will be for Longitude of each point
+				i++;
+					flagx=1;
+					
+				}
+
 				
+			
+				/*if(k==1){
+					currentDistance = TotalDistance(currentLong,currentLat,temp[0],temp[1]);
+					k = 0;
+					}
+				else{k++;}
+				temp[0] = currentLong;
+				temp[1] = currentLat;
+				*/
+				else{
+					currentDistance = TotalDistance(currentLong,currentLat,trajectory_points[i-2],trajectory_points[i-1]);
+				}
+				
+				
+				
+				
+        if (speed>1.1 & currentDistance<10 ){
+				trajectory_points[i]=currentLong;//i=0 ,even fields will be for longitude of each point
+				i++;
+
+				trajectory_points[i]=currentLat; //i=1 ,odd fields will be for Latitude of each point
+				i++;
+     DistanceAccstart +=currentDistance;
+        if((SW1_Pressed()==1)){
+					break;
+				}					
+				if(i>201)break; //2*no of points
 				wait_sec(4);	
-				
-		}
+        }
+		
+	}
 	
-	else continue;		
+	 else continue;		
 		
 	} while(1);
-	
+	return DistanceAccstart ;
 }
-	
-	//normal walking speed is 1.4 metres per second wikipedia
-	
-	//100 m needs 72 sec 
-	//each second will take a point
-
 
