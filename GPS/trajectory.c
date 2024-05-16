@@ -42,7 +42,7 @@ void GPS_Read(){
      char logName[] = "$GPRMC,";
 
 	
-    //Making Sure we recieved the correct Log "$GPRMC"
+    //Making Sure we recieved the correct Log "$GPRMC,"
 	do{
 	   while(UART2_Rx() != logName[j]);
 	   j++;	
